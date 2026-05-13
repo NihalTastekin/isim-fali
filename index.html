@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#b58a4b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="İsim Falı">
+  <title>İsim Falı</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      background: radial-gradient(circle at top, #fff4dd 0%, #f1dcc0 38%, #e8caa1 100%);
+      color: #352419;
+      padding: 20px;
+    }
+    .wrap { max-width: 760px; margin: 0 auto; }
+    .hero {
+      background: rgba(255,255,255,.88);
+      border: 1px solid rgba(158,111,54,.18);
+      border-radius: 30px;
+      padding: 26px 20px;
+      box-shadow: 0 18px 55px rgba(91,57,23,.18);
+      margin-top: 10px;
+    }
+    .logo {
+      width: 78px; height: 78px; border-radius: 25px;
+      margin: 0 auto 12px;
+      display: grid; place-items: center;
+      font-size: 36px;
+      background: linear-gradient(145deg, #f1d394, #9e6f36);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.45), 0 10px 24px rgba(105,71,31,.25);
+    }
+    h1 { text-align: center; margin: 0; font-size: 34px; letter-spacing: -.5px; }
+    .sub { text-align: center; color: #735c49; margin: 8px auto 18px; line-height: 1.45; max-width: 560px; }
+    .inputRow { display: flex; gap: 10px; flex-wrap: wrap; }
+    input {
+      flex: 1 1 260px;
+      padding: 16px;
+      font-size: 20px;
+      border-radius: 18px;
+      border: 1px solid #d8bd95;
+      background: #fffaf4;
+      outline: none;
+      color: #342318;
+    }
+    button {
+      flex: 1 1 150px;
+      padding: 16px 18px;
+      border: 0;
+      border-radius: 18px;
+      background: linear-gradient(145deg, #c59b5d, #8f642f);
+      color: white;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .card {
+      background: rgba(255,255,255,.9);
+      border: 1px solid rgba(158,111,54,.16);
+      border-radius: 24px;
+      padding: 18px;
+      margin-top: 14px;
+      box-shadow: 0 10px 30px rgba(91,57,23,.08);
+    }
+    .hidden { display: none; }
+    h2 { margin: 0 0 12px; font-size: 22px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      background: #fff8ee;
+      border: 1px solid #ead4b3;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 16px;
+    }
+    .sum {
+      font-size: 18px;
+      line-height: 1.6;
+      background: #fff8ee;
+      border: 1px solid #ead4b3;
+      padding: 14px;
+      border-radius: 18px;
+      word-break: break-word;
+    }
+    .bigNumber {
+      text-align: center;
+      font-size: 58px;
+      font-weight: 900;
+      color: #8f642f;
+      line-height: 1;
+      margin: 8px 0 6px;
+    }
+    .meaningItem {
+      border-top: 1px solid #ead4b3;
+      padding: 13px 0;
+      line-height: 1.45;
+    }
+    .meaningItem:first-child { border-top: 0; }
+    .meaningItem b { color: #8f642f; font-size: 18px; }
+    details summary {
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 18px;
+      padding: 8px 0;
+      color: #6e4b23;
+    }
+    .dictionary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .dictItem {
+      background: #fff8ee;
+      border: 1px solid #ead4b3;
+      border-radius: 16px;
+      padding: 12px;
+      line-height: 1.35;
+    }
+    .dictItem b { color: #8f642f; }
+    .note {
+      font-size: 13px; color: #7b6657; text-align: center; margin-top: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="logo">✨</div>
+      <h1>İsim Falı</h1>
+      <p class="sub">İsmi yaz; harf puanlarını, toplamı, sayının parçalarını ve sayı anlamlarını gör.</p>
+      <div class="inputRow">
+        <input id="nameInput" placeholder="Örn: Nihal" autocomplete="name">
+        <button onclick="analyze()">Analiz Et</button>
+      </div>
+      <div class="note">Not: Bu eğlence/numeroloji amaçlı bir yorum aracıdır.</div>
+    </section>
+
+    <section id="resultArea" class="hidden">
+      <div class="card">
+        <h2>Harf Puanları</h2>
+        <div id="letters" class="chips"></div>
+      </div>
+
+      <div class="card">
+        <h2>Toplam</h2>
+        <div id="sumLine" class="sum"></div>
+        <div id="totalNumber" class="bigNumber"></div>
+      </div>
+
+      <div class="card">
+        <h2>Sayı Analizi</h2>
+        <div id="analysis"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <details open>
+        <summary>Tüm Sayı Anlamları</summary>
+        <div id="dictionary" class="dictionary"></div>
+      </details>
+    </section>
+  </div>
+
+<script>
+const letterMap = {
+  "a":1, "b":2, "c":3, "ç":3, "d":4, "e":5, "f":6, "g":7, "ğ":7, "h":8,
+  "ı":9, "i":1, "j":1, "k":2, "l":3, "m":4, "n":5, "o":6, "ö":6,
+  "p":7, "r":9, "s":1, "ş":1, "t":2, "u":3, "ü":3, "v":4, "y":7, "z":8
+};
+
+const meanings = {
+  1:"Başlangıç, liderlik, cesaret ve kendini ortaya koyma enerjisi.",
+  2:"Uyum, sezgi, ortaklık ve hassas denge enerjisi.",
+  3:"İfade, yaratıcılık, neşe ve sosyal canlılık enerjisi.",
+  4:"Düzen, emek, güvenilirlik ve sağlam temel kurma enerjisi.",
+  5:"Hareket, özgürlük, değişim ve merak enerjisi.",
+  6:"Sevgi, aile, koruma, estetik ve sorumluluk enerjisi.",
+  7:"Derinlik, analiz, sezgi, içe dönüş ve bilgelik arayışı.",
+  8:"Güç, başarı, yönetim, maddi düzen ve kararlılık enerjisi.",
+  9:"Şefkat, idealizm, tamamlanma ve yardımseverlik enerjisi.",
+
+  10:"Yeni döngü, görünür olma ve potansiyeli başlatma enerjisi.",
+  11:"Sezgi, ilham, hassas algı ve ruhsal farkındalık enerjisi.",
+  12:"Öğrenme, sabır, uyumlanma ve deneyimle olgunlaşma enerjisi.",
+  13:"Dönüşüm, emek, disiplin ve yeniden yapılanma enerjisi.",
+  14:"Değişim içinde denge, özgürlük ile sorumluluğu birleştirme enerjisi.",
+  15:"Çekim, sevgi, estetik, iletişim ve sıcaklık enerjisi.",
+  16:"İçsel uyanış, ego sınavı, farkındalık ve yeniden yön bulma enerjisi.",
+  17:"Güçlü hedef, başarı arzusu ve kalıcı iz bırakma enerjisi.",
+  18:"Duyarlılık, sezgi, koruma ve güçlü duygusal derinlik enerjisi.",
+  19:"Bağımsızlık, özgüven, kendini kanıtlama ve yeniden doğuş enerjisi.",
+
+  20:"Duygusal farkındalık, ortaklık, diplomasi ve bekleme enerjisi.",
+  21:"İletişim, görünürlük, sosyal başarı ve yaratıcı ifade enerjisi.",
+  22:"Büyük yapı kurma, vizyon, planlama ve somutlaştırma enerjisi.",
+  23:"Esneklik, iletişim, hareket ve hızlı uyum enerjisi.",
+  24:"Aile, düzen, koruma ve güvenli alan kurma enerjisi.",
+  25:"Araştırma, sezgi, özgür düşünce ve içsel arayış enerjisi.",
+  26:"Sorumluluk, yönetim, maddi düzen ve güven inşa etme enerjisi.",
+  27:"Bilgelik, empati, hizmet ve içsel derinlik enerjisi.",
+  28:"Bağımsızlık, güç, girişim ve kararlı ilerleme enerjisi.",
+  29:"Hassas sezgi, ortaklık dersleri ve ruhsal olgunlaşma enerjisi.",
+
+  30:"Yaratıcı ifade, neşe, konuşma ve görünür olma enerjisi.",
+  40:"Düzen, emek, sağlamlık ve pratik gerçekçilik enerjisi.",
+  50:"Özgürlük, yenilik, keşif ve yaşam deneyimi enerjisi.",
+  60:"Sevgi, aile, denge, güzellik ve sorumluluk enerjisi.",
+  70:"Bilgelik, sezgi, yalnız kalarak güçlenme ve analiz enerjisi.",
+  80:"Güç, otorite, başarı, maddi yapı ve yönetim enerjisi.",
+  90:"İdealizm, şefkat, tamamlanma ve kolektif fayda enerjisi.",
+
+  100:"Güçlü başlangıç, kişisel irade ve yeni bir alan açma enerjisi.",
+  200:"İlişkiler, uyum, sezgisel iş birliği ve duygusal denge enerjisi.",
+  300:"Yaratıcı görünürlük, iletişim ve ilhamı büyütme enerjisi.",
+  400:"Sağlam temel, düzen, emek, yapı ve güven enerjisi.",
+  500:"Değişim, hareket, özgürleşme ve deneyim alanını genişletme enerjisi.",
+  600:"Koruma, aile, estetik, sevgi ve sorumluluğu büyütme enerjisi.",
+  700:"İçsel bilgelik, sezgi, derin araştırma ve anlam arayışı enerjisi.",
+  800:"Büyük hedef, yönetim, güç, başarı ve maddi düzen enerjisi.",
+  900:"İnsani değerler, tamamlanma, şefkat ve yüksek ideal enerjisi."
+};
+
+function titleCaseLetter(ch) {
+  return ch.toLocaleUpperCase("tr-TR");
+}
+
+function splitPlaceValues(num) {
+  const s = String(num);
+  const parts = [];
+  for (let i = 0; i < s.length; i++) {
+    const digit = Number(s[i]);
+    if (digit !== 0) {
+      const zeros = s.length - i - 1;
+      parts.push(digit * Math.pow(10, zeros));
+    }
+  }
+  return parts;
+}
+
+function getLastTwo(num) {
+  if (num < 100) return null;
+  const lastTwo = num % 100;
+  return lastTwo >= 10 ? lastTwo : null;
+}
+
+function addMeaning(container, label, number) {
+  const div = document.createElement("div");
+  div.className = "meaningItem";
+  const text = meanings[number] || "Bu sayı için özel bir anlam eklenmemiş. Dilersen bu sözlüğe ayrıca tanım eklenebilir.";
+  div.innerHTML = "<b>" + label + " " + number + "</b><br>" + text;
+  container.appendChild(div);
+}
+
+function analyze() {
+  const raw = document.getElementById("nameInput").value.trim();
+  const name = raw.toLocaleLowerCase("tr-TR");
+  const lettersDiv = document.getElementById("letters");
+  const sumLine = document.getElementById("sumLine");
+  const totalNumber = document.getElementById("totalNumber");
+  const analysis = document.getElementById("analysis");
+
+  lettersDiv.innerHTML = "";
+  analysis.innerHTML = "";
+
+  let values = [];
+  for (const ch of name) {
+    if (letterMap[ch]) {
+      values.push({letter: ch, value: letterMap[ch]});
+    }
+  }
+
+  if (!raw || values.length === 0) {
+    document.getElementById("resultArea").classList.remove("hidden");
+    lettersDiv.innerHTML = "<span class='chip'>Lütfen bir isim yaz.</span>";
+    sumLine.textContent = "";
+    totalNumber.textContent = "—";
+    analysis.innerHTML = "<div class='meaningItem'>Analiz için en az bir harf gerekir.</div>";
+    return;
+  }
+
+  values.forEach(item => {
+    const chip = document.createElement("span");
+    chip.className = "chip";
+    chip.textContent = titleCaseLetter(item.letter) + " = " + item.value;
+    lettersDiv.appendChild(chip);
+  });
+
+  const total = values.reduce((a,b) => a + b.value, 0);
+  sumLine.textContent = values.map(v => v.value).join(" + ") + " = " + total;
+  totalNumber.textContent = total;
+
+  const parts = splitPlaceValues(total);
+  parts.forEach(p => addMeaning(analysis, "Basamak değeri:", p));
+
+  const lastTwo = getLastTwo(total);
+  if (lastTwo && meanings[lastTwo]) {
+    addMeaning(analysis, "Son iki hane özel anlamı:", lastTwo);
+  }
+
+  addMeaning(analysis, "Toplam sayı:", total);
+
+  document.getElementById("resultArea").classList.remove("hidden");
+}
+
+function buildDictionary() {
+  const dict = document.getElementById("dictionary");
+  const keys = Object.keys(meanings).map(Number).sort((a,b)=>a-b);
+  keys.forEach(k => {
+    const div = document.createElement("div");
+    div.className = "dictItem";
+    div.innerHTML = "<b>" + k + "</b><br>" + meanings[k];
+    dict.appendChild(div);
+  });
+}
+buildDictionary();
+</script>
+</body>
+</html>
