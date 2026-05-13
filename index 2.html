@@ -1,0 +1,93 @@
+
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gösterge İsim Falı</title>
+<style>
+body{font-family:-apple-system,sans-serif;background:#f5e6c8;padding:20px;color:#2d1d0f}
+.card{background:white;border-radius:20px;padding:20px;max-width:700px;margin:auto}
+input,button{padding:14px;border-radius:12px;border:none;font-size:18px}
+input{width:65%;border:1px solid #ccc}
+button{background:#9c6b30;color:white}
+.item{padding:10px;margin-top:8px;background:#f8f1e7;border-radius:10px}
+h1{text-align:center}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>Gösterge İsim Falı</h1>
+
+<input id="name" placeholder="İsim gir">
+<button onclick="hesapla()">Analiz Et</button>
+
+<div id="sonuc"></div>
+</div>
+
+<script>
+const harfler = {
+"a":1,"b":2,"c":3,"ç":3,"d":4,"e":5,"f":6,"g":7,"ğ":7,"h":8,"ı":9,
+"i":9,"k":10,"l":20,"m":30,"n":40,"o":50,"ö":50,"p":60,"r":80,
+"s":90,"ş":90,"t":100,"v":200,"u":300,"ü":300,"y":400,"z":500,"j":600
+};
+
+const anlamlar = {
+1:"Hassas duygular, hırs, şöhret.",
+5:"Yıldız, saadet, letafet, evlenme.",
+10:"Muvaffakiyet, kuvvetli fikir.",
+20:"Taassup, gam.",
+30:"Şöhret, nikâh, merasim.",
+40:"Düğün, eğlence toplantısı.",
+50:"Kusur veya ceza bağışlaması.",
+80:"Deva.",
+90:"Körlük, hata, keder.",
+100:"Cenabı Hakkın yardımı.",
+200:"Mütereddit.",
+300:"Selamet, iman, inanç.",
+400:"Uzun ve yorucu seyahat.",
+500:"Kudsiyet.",
+600:"Kemal, olgunluk."
+};
+
+function ayir(sayi){
+let s=String(sayi);
+let liste=[];
+for(let i=0;i<s.length;i++){
+let rakam=parseInt(s[i]);
+if(rakam!==0){
+let deger=rakam*Math.pow(10,s.length-i-1);
+liste.push(deger);
+}
+}
+return liste;
+}
+
+function hesapla(){
+let isim=document.getElementById("name").value.toLowerCase("tr");
+let toplam=0;
+let detay="";
+
+for(let h of isim){
+if(harfler[h]){
+toplam+=harfler[h];
+detay += `<div class='item'>${h.toUpperCase()} = ${harfler[h]}</div>`;
+}
+}
+
+let sonuc = `<h2>Toplam: ${toplam}</h2>`;
+let parcalar = ayir(toplam);
+
+for(let p of parcalar){
+sonuc += `<div class='item'><b>${p}</b> → ${anlamlar[p] || "Anlam eklenmedi."}</div>`;
+}
+
+if(anlamlar[toplam]){
+sonuc += `<div class='item'><b>${toplam}</b> özel anlamı → ${anlamlar[toplam]}</div>`;
+}
+
+document.getElementById("sonuc").innerHTML = detay + sonuc;
+}
+</script>
+</body>
+</html>
