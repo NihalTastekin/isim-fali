@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>İsim Falı</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#eadfc3;
+    margin:0;
+    padding:20px;
+    color:#2d1b0f;
+}
+
+.container{
+    max-width:700px;
+    margin:auto;
+    background:white;
+    border-radius:25px;
+    padding:25px;
+    box-shadow:0 0 15px rgba(0,0,0,0.1);
+}
+
+h1{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+input{
+    width:100%;
+    padding:16px;
+    font-size:20px;
+    border-radius:15px;
+    border:none;
+    background:#f4efe6;
+    box-sizing:border-box;
+    margin-bottom:15px;
+}
+
+button{
+    width:100%;
+    padding:15px;
+    font-size:20px;
+    border:none;
+    border-radius:15px;
+    background:#7a4d2a;
+    color:white;
+    cursor:pointer;
+    margin-bottom:25px;
+}
+
+.card{
+    background:#f4efe6;
+    padding:15px;
+    border-radius:15px;
+    margin-bottom:12px;
+    font-size:22px;
+}
+
+.total{
+    font-size:42px;
+    font-weight:bold;
+    margin-top:30px;
+    margin-bottom:20px;
+}
+
+.sectionTitle{
+    font-size:28px;
+    margin-top:35px;
+    margin-bottom:20px;
+    font-weight:bold;
+}
+
+.meaning{
+    background:#f4efe6;
+    padding:15px;
+    border-radius:15px;
+    margin-bottom:12px;
+    font-size:22px;
+    line-height:1.5;
+}
+
+.listItem{
+    background:#faf6ef;
+    padding:10px;
+    border-radius:10px;
+    margin-bottom:8px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🔮 İsim Falı</h1>
+
+<input type="text" id="nameInput" placeholder="İsim girin">
+
+<button onclick="calculate()">Analiz Et</button>
+
+<div id="result"></div>
+
+</div>
+
+<script>
+
+const letterValues = {
+"A":1,"B":2,"C":3,"Ç":3,"D":4,"E":5,"F":6,"G":7,"Ğ":7,
+"H":8,"I":9,"İ":9,"J":600,"K":10,"L":20,"M":30,"N":40,
+"O":50,"Ö":50,"P":60,"Q":70,"R":80,"S":90,"Ş":90,
+"T":100,"U":300,"Ü":300,"V":200,"Y":400,"Z":500
+};
+
+const meanings = {
+1:"Hassas duyguları, hırsı, şöhret, resim çizmek.",
+2:"Tahrip, ölüm, felaket.",
+3:"Dindar, talihli, ruh çekici.",
+4:"Katılık, akıl, metanet.",
+5:"Yıldız, saadet, letafet, izdivaç, evlenme.",
+6:"Olgunluk, çalışmak.",
+7:"Hayatın seyrine tabi, müşteri, hür, saadetin erişmesi.",
+8:"Adalet, vakarını muhafazası.",
+9:"Noksan, tenezzül, ıstırap bekliyor.",
+10:"Muvaffakiyet, kuvvetli fikir, gelecek mutluluk.",
+20:"Taassup, gam.",
+30:"Şöhret, nikah, merasim.",
+40:"Düğün, eğlence toplantısı, nikah.",
+50:"Kusur veya ceza bağışlaması, serbesti.",
+60:"Dulluk.",
+70:"Acemilik, ilim ve fen, gevezelik.",
+80:"Deva.",
+90:"Körlük, hata, keder.",
+100:"Cenabı Hakkın yardımı.",
+200:"Mütereddid.",
+300:"Selamet, iman, inanç, mütefekkir.",
+400:"Uzun ve yorucu seyahat.",
+500:"Kudsiyet.",
+600:"Kemal, olgunluk.",
+666:"Bir şahsi hıyanet, hile, fesat, düşmanlar.",
+700:"Kuvvet.",
+800:"Hükümdarlık.",
+900:"Harp, mücadele, kavga.",
+1000:"Merhamet."
+};
+
+function calculate(){
+
+const name = document.getElementById("nameInput").value.toUpperCase().trim();
+
+let html = "";
+let total = 0;
+
+for(let char of name){
+
+if(letterValues[char]){
+
+let value = letterValues[char];
+
+total += value;
+
+html += `<div class="card">${char} = ${value}</div>`;
+
+}
+
+}
+
+html += `<div class="total">Toplam: ${total}</div>`;
+html += `<div class="sectionTitle">Gösterge Anlamları</div>`;
+
+let remaining = total;
+const parts = [];
+
+const nums = [1000,900,800,700,600,500,400,300,200,100,90,80,70,60,50,40,30,20,10,9,8,7,6,5,4,3,2,1];
+
+for(let n of nums){
+while(remaining >= n){
+parts.push(n);
+remaining -= n;
+}
+}
+
+parts.forEach(p=>{
+if(meanings[p]){
+html += `<div class="meaning"><b>${p}</b> → ${meanings[p]}</div>`;
+}
+});
+
+if(meanings[total]){
+html += `<div class="sectionTitle">Toplam Sayının Özel Anlamı</div>`;
+html += `<div class="meaning"><b>${total}</b> → ${meanings[total]}</div>`;
+}
+
+document.getElementById("result").innerHTML = html;
+
+}
+
+</script>
+
+</body>
+</html>
